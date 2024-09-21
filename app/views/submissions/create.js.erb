@@ -1,0 +1,22 @@
+// app/views/submissions/create.js.erb
+<% if @submission.errors.any? %>
+  alert("Error: <%= j @submission.errors.full_messages.join(', ') %>");
+<% else %>
+  // Hide the form
+  window.StimulusApp.getControllerForElementAndIdentifier(document.querySelector('[data-controller="submissions"]'), "submissions").hideForm();
+
+  // Show notification
+  window.StimulusApp.getControllerForElementAndIdentifier(document.querySelector('[data-controller="submissions"]'), "submissions").showNotification("Submission successful!");
+
+  // Reset the form
+  document.getElementById('submission-form').reset();
+
+  // Update the scoreboard
+  const scoreboard = document.getElementById('scoreboard');
+  scoreboard.innerHTML = "<%= j(render 'scoreboard', submissions: @submissions.order(difference: :desc)) %>";
+
+  // Hide notification after 3 seconds
+  setTimeout(() => {
+    window.StimulusApp.getControllerForElementAndIdentifier(document.querySelector('[data-controller="submissions"]'), "submissions").hideNotification();
+  }, 3000);
+<% end %>

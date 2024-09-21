@@ -1,0 +1,24 @@
+<table>
+  <thead>
+    <tr>
+      <th>Namn</th>
+      <th>Längd (cm)</th>
+      <th>Räckvidd (cm)</th>
+      <th>Apindex</th>
+      <th>Ålder</th>
+      <th>Kön</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% submissions.each do |submission| %>
+      <tr>
+        <td><%= submission.name %></td>
+        <td><%= submission.height %></td>
+        <td><%= submission.arm_length %></td>
+        <td><%= submission.difference %></td>
+        <td><%= submission.age %></td>
+        <td><%= submission.gender %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

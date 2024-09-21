@@ -1,0 +1,102 @@
+<div class="container" data-controller="submissions help">
+  <h1>Hela Sveriges Apindex</h1>
+
+  <button 
+    class="help-button" 
+    data-action="click->help#open" 
+    aria-haspopup="dialog" 
+    aria-controls="help-dialog"
+  >
+    Hur mäter jag?
+  </button>
+
+  <div 
+    id="help-dialog" 
+    class="dialog hidden" 
+    role="dialog" 
+    aria-modal="true" 
+    aria-labelledby="help-dialog-title" 
+    data-help-target="dialog"
+  >
+    <div class="dialog-content">
+      <h2 id="help-dialog-title">Hur mäter jag?</h2>
+      <p>
+        Apindex räknas ut genom att ta armvidden minus längden. <br>
+        För att så noggrant fylla i formuläret så följ riktlinjerna nedan:
+        <ul>
+          <li><strong>Längd:</strong> Mät från fötterna upp till toppen avhuvudet medan du står så rakt som möjligt, helst mot en vägg.</li>
+          <li><strong>Armvidd:</strong> Mät armar från långfinger till långfinger.</li>
+          <li><strong>Ålder:</strong> Ange din ålder.</li>
+          <li><strong>Kön:</strong> Välj ditt kön från listan i formuläret.</li>
+        </ul>
+      </p>
+      <button 
+        class="close-button" 
+        data-action="click->help#close" 
+        aria-label="Close Help Dialog"
+      >
+        Stäng
+      </button>
+    </div>
+  </div>
+
+  <button class="toggle-form" data-action="click->submissions#toggleForm" data-submissions-target="toggleButton">
+    Skicka in ditt formulär
+  </button>
+
+  <div id="notification" data-submissions-target="notification" style="display:none;">
+  </div>
+
+  <div id="form-container" data-submissions-target="form" style="display: none;">
+  <%= form_with(model: @submission, local: false, html: { id: 'submission-form' }) do |form| %>
+    <% if @submission.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@submission.errors.count, "fel") %> förhindrade detta Apindex från att sparas:</h2>
+        <ul>
+          <% @submission.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="form-group">
+      <%= form.label "Namn" %>
+      <%= form.text_field :name, required: true, maxlength: 40, placeholder: "Ditt namn (max 40 karaktärer)", class: ("field_with_errors" if @submission.errors[:name].any?)%>
+    </div>
+
+    <div class="form-group">
+      <%= form.label "Längd" %>
+      <%= form.number_field :height, step: :any, required: true, min: 0, max: 400, placeholder: "Din längd i cm", class: ("field_with_errors" if @submission.errors[:height].any?) %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label "Armvidd" %>
+      <%= form.number_field :arm_length, step: :any, required: true, min: 0, max: 400, placeholder: "Din armvidd i cm", class: ("field_with_errors" if @submission.errors[:arm_length].any?)%>
+    </div>
+
+    <div class="form-group">
+      <%= form.label "Ålder" %>
+      <%= form.number_field :age, required: true, min: 0, max: 120, placeholder: "Din ålder", class: ("field_with_errors" if @submission.errors[:age].any?)%>
+    </div>
+
+    <div class="form-group">
+      <%= form.label "Kön" %>
+      <%= form.select :gender, options_for_select(['Man', 'Kvinna', 'Annat']), prompt: 'Välj kön', required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= form.submit 'Skicka' %>
+    </div>
+  <% end %>
+</div>
+
+  <h2>Scoreboard</h2>
+    <div>
+        <%= link_to "Sortera Apindex: Högt till lågt", submissions_path(sort_order: 'desc'), class: "sort-button" %>
+        <%= link_to "Sortera Apindex: Lågt till högt", submissions_path(sort_order: 'asc'), class: "sort-button" %>
+    </div>
+  <div id="scoreboard" data-submissions-target="scoreboard">
+    <%= render 'scoreboard', submissions: @submissions %>
+  </div>
+<%= paginate @submissions %>
+</div>
